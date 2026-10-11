@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Please cite this software when using the released HeRI-Nav model."
+type: software
+title: "HeRI-Nav: Trajectory-Consistent Residual Learning for Underwater INS/DVL Navigation"
+authors:
+  - family-names: Li
+    given-names: Shuyu
+    affiliation: "Faculty of Information Science and Engineering, Ocean University of China"
+version: 0.1.0
+date-released: 2026-10-11
+repository-code: "https://github.com/BBOOOKK/HeRI-Nav-Code"
+url: "https://github.com/BBOOOKK/HeRI-Nav-Code"

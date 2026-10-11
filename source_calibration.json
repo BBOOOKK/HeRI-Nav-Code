@@ -1,0 +1,91 @@
+{
+  "dvl": {
+    "coefficient": [
+      [
+        1.0339592533364705,
+        -0.0032480594017352286,
+        -0.01042207762609497
+      ],
+      [
+        -0.008459804334309881,
+        1.0485615953815453,
+        0.005330599940396281
+      ],
+      [
+        -0.08336170756118857,
+        0.0029263412497918407,
+        1.0034332312400174
+      ],
+      [
+        -0.0005405771295242523,
+        -6.359465153260017e-05,
+        -1.890977597718596e-05
+      ]
+    ],
+    "examples": 5940,
+    "fit_input_sha256": "5084526c28dfb56cad29bbabb40fbc1533ab74e7fbd5cd608cb8ed3207d09565",
+    "fit_target_sha256": "8bb3c7c821b95f517db2a50ad6456dbad1a5958fcddaa06f12456ccc81d444cb",
+    "rank": 4,
+    "rank_deficient": false,
+    "regularization": null,
+    "residual_sum_squares": [
+      0.3892620378962211,
+      0.48286844549821994,
+      0.07229609414256583
+    ],
+    "selection": "one fixed unregularized fit; no validation objective",
+    "singular_values": [
+      77.14843760236232,
+      12.335887536364678,
+      8.044610237591012,
+      1.167215454838424
+    ]
+  },
+  "fold": {
+    "fit": [
+      "DataSet02",
+      "DataSet03",
+      "DataSet04",
+      "DataSet05",
+      "DataSet06",
+      "DataSet07",
+      "DataSet08",
+      "DataSet09"
+    ],
+    "fold_id": "all_source_final_fit",
+    "fold_index": 0,
+    "outer_holdout": null,
+    "validation": null
+  },
+  "gyro": {
+    "active_mask": [
+      0,
+      0,
+      0
+    ],
+    "cost": 0.15190777868929767,
+    "jacobian_rank": 3,
+    "message": "`xtol` termination condition is satisfied.",
+    "nfev": 8,
+    "njev": 5,
+    "optimality": 2.9216488158082526e-09,
+    "parameter": [
+      -0.004590923577657632,
+      -0.0025981868839967475,
+      0.0012678109246450232
+    ],
+    "singular": [
+      213.264780690451,
+      209.0371243780564,
+      209.01310193950638
+    ],
+    "status": 3,
+    "success": true
+  },
+  "gyro_intervals": 711,
+  "independent_dvl_difference": 0.0,
+  "independent_gyro_cost_difference": 0.0,
+  "protocol_sha256": "87b7e36bc5607e41dec03e1f2ec819416f8b5700aeb9561bc04f07d580d1f6a0",
+  "velocity_samples": 5940,
+  "verified": true
+}

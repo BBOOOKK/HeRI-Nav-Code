@@ -1,0 +1,39 @@
+{
+  "model_name": "HeRI-Nav",
+  "variant": "risk_stratified_refinement",
+  "seed": 42,
+  "source_checkpoint": {
+    "fold": 0,
+    "seed": 42,
+    "sha256": "82367b6adc0b24c96c2768118a2eaf1cc96fe26b61d2c236588b50a920a45013",
+    "training_sha256": "d04684018e8db39d7fabc80a21e4307656b36cead421b7f9ab2809170722778c"
+  },
+  "features": [
+    "acce_x",
+    "acce_y",
+    "acce_z",
+    "gyro_x",
+    "gyro_y",
+    "gyro_z",
+    "dvl_vx",
+    "dvl_vy",
+    "dvl_vz",
+    "dt",
+    "roll",
+    "pitch",
+    "yaw_sin",
+    "yaw_cos"
+  ],
+  "input_shape": [
+    "intervals",
+    200,
+    14
+  ],
+  "window_seconds": 8,
+  "sample_hz": 25,
+  "training_parameters": 1261637,
+  "mean_export_parameters": 1261250,
+  "preprocessing": "Window-relative yaw, followed by embedded source normalization",
+  "output": "Local horizontal residual in metres; accumulated in nominal interval-start heading",
+  "model_selection_sha256": "0531fc6493015b7f599e4ec0c048394edbcc8eae6e83610e5ab8ddc3b72fbaaf"
+}
