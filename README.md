@@ -8,7 +8,9 @@ Faculty of Information Science and Engineering, Ocean University of China
 HeRI-Nav learns horizontal displacement corrections around an INS/DVL estimator.
 The local residual is transported by the nominal interval-start heading and
 accumulated into position. Source training constrains mission-average and
-initially low-error-subset risks.
+initially low-error-subset risks. During inference, sensor vectors and attitude
+are jointly expressed in a source-fitted roll/pitch basis, preserving the
+initial yaw and world-frame vectors. This projection adds no learned parameters.
 
 This release provides the frozen all-source **seed-42** mean predictor, its
 PyTorch architecture, embedded normalization, source calibration, and an offline
@@ -29,7 +31,7 @@ python run.py predict --input examples/synthetic_windows.npz --output prediction
 
 The example is a **synthetic interface test**, not an experimental trajectory or
 accuracy benchmark. Validation compares computed outputs with saved predictions.
-The initial release was checked with Python 3.14, PyTorch 2.14.0, and NumPy 2.5.3.
+This release was checked with Python 3.14, PyTorch 2.14.0, and NumPy 2.5.3.
 
 ## Input and output
 
@@ -44,8 +46,8 @@ Supply an NPZ with these arrays:
 
 Channel order is acceleration (3, m/s²), angular rate (3, rad/s), body-frame
 DVL velocity (3, m/s), sample interval (s), roll and pitch (rad), and sine/cosine
-of propagated yaw. `config.json` lists the channels. The runner converts the yaw
-pair to window-relative heading; source standardization is embedded in the model.
+of propagated yaw. `config.json` lists the channels. The runner first applies the source-basis projection and then converts the
+yaw pair to window-relative heading; source standardization is embedded in the model.
 Sensor features use the frame-converted measurements before the source-fitted
 sensor calibration. Supply nominal positions and headings from the calibrated
 physical estimator in a common navigation frame.
@@ -68,10 +70,15 @@ this release executes the learned correction stage.
 
 The trained network has 1,261,637 parameters, including the covariance projection
 used in pretraining. Navigation uses the mean output. Training data, full physical
-filter replay, and reproduction of the multi-seed tables are outside this initial
+filter replay, and reproduction of the multi-seed tables are outside this
 inference release; the paper specifies their experimental settings.
 
 ## Citation
 
 Use the repository's `CITATION.cff` for this software release. The associated
 manuscript is in preparation; no publication DOI is assigned here.
+
+Version 0.1.1 adds the source-fitted input projection used in the current
+manuscript. The checkpoint weights are unchanged from v0.1.0. The fixed roll/pitch
+center is recorded in `config.json`; it is applied equally to every input file.
+Training risks were constrained before this inference-only transformation.

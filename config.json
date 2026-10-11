@@ -33,7 +33,12 @@
   "sample_hz": 25,
   "training_parameters": 1261637,
   "mean_export_parameters": 1261250,
-  "preprocessing": "Window-relative yaw, followed by embedded source normalization",
+  "preprocessing": "Source sensor-basis projection, window-relative yaw, embedded source normalization",
   "output": "Local horizontal residual in metres; accumulated in nominal interval-start heading",
-  "model_selection_sha256": "0531fc6493015b7f599e4ec0c048394edbcc8eae6e83610e5ab8ddc3b72fbaaf"
+  "model_selection_sha256": "0531fc6493015b7f599e4ec0c048394edbcc8eae6e83610e5ab8ddc3b72fbaaf",
+  "source_center_roll_pitch": [
+    -0.015313691364554474,
+    -0.11279979749928867
+  ],
+  "application_evidence_sha256": "d1cadc7fd7c72a03f9da0fa7cf8ee2bf422e4d0be8a9673fd543c4fff21e2e90"
 }

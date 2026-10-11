@@ -18,10 +18,53 @@ def relative_heading(windows):
     result[:, :, 13] = c*c[:, :1] + s*s[:, :1]
     return result
 
+def zyx_rotation(yaw, pitch, roll):
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    cr, sr = np.cos(roll), np.sin(roll)
+    return np.stack((cy*cp, cy*sp*sr-sy*cr, cy*sp*cr+sy*sr,
+                     sy*cp, sy*sp*sr+cy*cr, sy*sp*cr-cy*sr,
+                     -sp, cp*sr, cp*cr), axis=-1).reshape(*np.shape(yaw), 3, 3)
+
+def source_sensor_basis(x, center_roll_pitch):
+    """Rotate all vector streams and attitudes; retain the initial yaw.
+
+    The basis is constant within each completed window and determined by its
+    first attitude. Physical estimator states and output transport frames are
+    separate inputs and are not changed here. The center is fitted on source
+    sensor orientations, with equal mission weights.
+    """
+    x = np.asarray(x)
+    center = np.asarray(center_roll_pitch, dtype=np.float64)
+    if x.ndim != 3 or x.shape[1:] != (200, 14) or not len(x):
+        raise ValueError('Expected nonempty N x 200 x 14 sensor windows.')
+    if center.shape != (2,) or not np.isfinite(center).all() or not np.isfinite(x).all():
+        raise ValueError('Finite windows and a two-element roll/pitch center are required.')
+    if not np.issubdtype(x.dtype, np.floating):
+        raise ValueError('Sensor windows must have a floating-point dtype.')
+    raw = x.astype(np.float64)
+    n = len(x)
+    initial = zyx_rotation(np.zeros(n), raw[:, 0, 11], raw[:, 0, 10])
+    target = zyx_rotation(np.zeros(n), np.full(n, center[1]), np.full(n, center[0]))
+    change = target.swapaxes(-1, -2) @ initial
+    value = raw.copy()
+    for k in (0, 3, 6):
+        value[..., k:k+3] = np.einsum('nij,ntj->nti', change, raw[..., k:k+3])
+    yaw = np.arctan2(raw[..., 12], raw[..., 13])
+    rotation = zyx_rotation(yaw, raw[..., 11], raw[..., 10]) @ change[:, None].swapaxes(-1, -2)
+    horizontal = np.hypot(rotation[..., 0, 0], rotation[..., 1, 0])
+    if np.any(horizontal < 1e-5):
+        raise ValueError('The projected attitude is at an Euler pitch singularity.')
+    yaw = np.arctan2(rotation[..., 1, 0], rotation[..., 0, 0])
+    value[..., 10] = np.arctan2(rotation[..., 2, 1], rotation[..., 2, 2])
+    value[..., 11] = np.arctan2(-rotation[..., 2, 0], horizontal)
+    value[..., 12], value[..., 13] = np.sin(yaw), np.cos(yaw)
+    return value.astype(x.dtype)
+
 
 def infer(network, input_file):
     with np.load(input_file, allow_pickle=False) as z:
-        x = relative_heading(z['x'])
+        x = relative_heading(source_sensor_basis(z['x'], [-0.015313691364554474, -0.11279979749928867]))
         nominal = np.asarray(z['nominal'], dtype=float)
         yaw = np.asarray(z['yaw'], dtype=float)
         stamps = z['stamps'].copy()
